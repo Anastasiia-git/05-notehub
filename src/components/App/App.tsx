@@ -7,6 +7,7 @@ import { useDebouncedCallback } from "use-debounce";
 import SearchBox from "../SearchBox/SearchBox";
 import Pagination from "../Pagination/Pagination";
 import NoteList from "../NoteList/NoteList";
+import NoteForm from "../NoteForm/NoteForm";
 import Modal from "../Modal/Modal";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Loader from "../Loader/Loader";
@@ -26,26 +27,19 @@ export default function App() {
 
   const notes = data?.notes ?? [];
 
-  const handleSearch = (search: string) => {
-    setSearch(search);
-    setPage(1);
-  };
-
   const onChange = useDebouncedCallback((value: string) => {
     setSearch(value);
     setPage(1);
   }, 300);
 
-  const openModal = () => {
-    setModal(true);
-  };
+  const openModal = () => setModal(true);
   const closeModal = () => setModal(false);
 
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
         <Toaster position="top-right" />
-        <SearchBox onSubmit={handleSearch} value={search} onChange={onChange} />
+        <SearchBox value={search} onChange={onChange} />
         {data && data.totalPages > 1 && (
           <Pagination
             page={page}
@@ -62,7 +56,11 @@ export default function App() {
         <ErrorMessage message="Request failed. Try again." />
       )}
       {!isLoading && !isError && notes.length > 0 && <NoteList notes={notes} />}
-      {modal && <Modal onClose={closeModal} />}
+      {modal && (
+        <Modal onClose={closeModal}>
+          <NoteForm onClose={closeModal} />
+        </Modal>
+      )}
     </div>
   );
 }

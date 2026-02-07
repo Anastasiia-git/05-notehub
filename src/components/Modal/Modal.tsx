@@ -1,18 +1,16 @@
 import css from "./Modal.module.css";
 import { createPortal } from "react-dom";
 import { useEffect } from "react";
-import NoteForm from "../NoteForm/NoteForm";
 
 interface ModalProps {
   onClose: () => void;
+  children: React.ReactNode;
 }
 
-function Modal({ onClose }: ModalProps) {
+function Modal({ onClose, children }: ModalProps) {
   const modalRoot = document.getElementById("modal-root");
 
   useEffect(() => {
-    if (!modalRoot) return;
-
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
@@ -26,7 +24,7 @@ function Modal({ onClose }: ModalProps) {
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = prevOverflow;
     };
-  }, [onClose, modalRoot]);
+  }, [onClose]);
 
   if (!modalRoot) return null;
 
@@ -38,7 +36,7 @@ function Modal({ onClose }: ModalProps) {
       aria-modal="true"
     >
       <div onClick={(e) => e.stopPropagation()} className={css.modal}>
-        <NoteForm onClose={onClose} />
+        {children}
       </div>
     </div>,
     modalRoot,

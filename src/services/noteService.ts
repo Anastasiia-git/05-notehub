@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { Note } from "../types/note";
 
-const BASE_URL = "https://notehub-public.goit.study";
+const BASE_URL = "https://notehub-public.goit.study/api";
 
 const NOTEHUB_TOKEN = import.meta.env.VITE_NOTEHUB_TOKEN as string | undefined;
 
@@ -24,23 +24,22 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-interface FetchNotesResponse {
+interface FetchNotesParams {
   search?: string;
   page?: number;
   perPage?: number;
 }
 
 export interface NoteResponse {
-  page: number;
   notes: Note[];
   totalPages: number;
 }
 
 export const fetchNotes = async (
-  params: FetchNotesResponse,
+  params: FetchNotesParams,
 ): Promise<NoteResponse> => {
   try {
-    const response = await api.get<NoteResponse>("/api/notes", {
+    const response = await api.get<NoteResponse>("/notes", {
       params: {
         search: params.search,
         page: params.page ?? 1,
@@ -62,7 +61,7 @@ export const fetchNotes = async (
 
 export const createNote = async (note: Omit<Note, "id">): Promise<Note> => {
   try {
-    const { data } = await api.post<Note>("/api/notes", note);
+    const { data } = await api.post<Note>("/notes", note);
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -72,7 +71,7 @@ export const createNote = async (note: Omit<Note, "id">): Promise<Note> => {
   }
 };
 
-export const deleteNote = async (id: number): Promise<Note> => {
-  const { data } = await api.delete<Note>(`/api/notes/${id}`);
+export const deleteNote = async (id: string): Promise<Note> => {
+  const { data } = await api.delete<Note>(`/notes/${id}`);
   return data;
 };

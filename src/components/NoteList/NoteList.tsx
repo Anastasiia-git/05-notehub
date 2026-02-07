@@ -18,7 +18,7 @@ function NoteList({ notes }: NoteListProps) {
     },
   });
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     if (!confirm("Delete this note?")) return;
     deleteMutation.mutate(id);
   };
