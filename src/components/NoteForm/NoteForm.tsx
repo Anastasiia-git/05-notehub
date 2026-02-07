@@ -20,7 +20,7 @@ const schema = Yup.object({
     .min(3, "Too short!")
     .max(50, "Too long!")
     .required("Required"),
-  content: Yup.string().trim().min(3, "Too short!").max(500, "Too long!"),
+  content: Yup.string().trim(),
   tag: Yup.string().required("Required"),
 });
 
